@@ -1,0 +1,16 @@
+{
+  "name": "e-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon --exec electron . --watch ./ --ext .html,.js,.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^27.1.2",
+    "electron-win-state": "^1.1.22",
+    "electron-window-state": "^5.0.3"
+  }
+}
