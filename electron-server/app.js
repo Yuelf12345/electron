@@ -31,6 +31,7 @@ router.get('/',ctx=>{
 // 注册
 router.post('/register', User.userRegister)
 router.post('/login', User.userLogin)
+
 router.post('/addFriends', User.addFriends)
 router.get('/getFriends', User.getFriends)
 router.post('/addChat', User.addChat)

@@ -1,6 +1,7 @@
+const { uuid } = require('../utils/util');
 // const db = require('../utils/db.js');
 const mysql = require('mysql2/promise');
-
+const jwt = require('jsonwebtoken');
 let db;
 
 ~async function () {
@@ -13,39 +14,80 @@ let db;
 }()
 
 console.log('db', db);
-
 const user = {
     // 注册
     userRegister: async (ctx) => {
-        ctx.body = '注册成功'
-        const user_id = 'wangwu_user_id';
-        const username = '王五';
-        const password = '123456';  // jwt加密
-        const nickname = '隔壁老张';
+        const { username, password } = ctx.request.body
+        const user_id = uuid();
+        const nickname = username;
         const gender = 1;
         const birthday = new Date();
-        const avatar = '123456';
-        const friends = JSON.stringify(['1111', '22222222', '3333']);
-        const blacklist = JSON.stringify(['1111', '22222222', '3333']);
-        const applicationlist = JSON.stringify(['1111', '22222222', '3333']);
-        const rejectlist = JSON.stringify(['1111', '22222222', '3333']);
+        const avatar = `/img/default_avatar/avatar${Math.floor(Math.random() * 10) + 1}.webp`;
+        const friends = JSON.stringify([]);
+        const blacklist = JSON.stringify([]);
+        const applicationlist = JSON.stringify([]);
+        const rejectlist = JSON.stringify([]);
         const loginTime = new Date();
         const lastLoginTime = new Date();
         const created_at = new Date();
-        let rs = await db.query("insert into `users` (`user_id`,`username`,`password`,`nickname`,`gender`,`birthday`,`avatar`,`friends`,`blacklist`,`applicationlist`,`rejectlist`,`loginTime`,`lastLoginTime`,`created_at`) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
-            user_id, username, password, nickname, gender, birthday, avatar, friends, blacklist, applicationlist, rejectlist, loginTime, lastLoginTime, created_at,
-        ])
+        try {
+            await db.query("insert into `users` (`user_id`,`username`,`password`,`nickname`,`gender`,`birthday`,`avatar`,`friends`,`blacklist`,`applicationlist`,`rejectlist`,`loginTime`,`lastLoginTime`,`created_at`) value (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
+                user_id, username, password, nickname, gender, birthday, avatar, friends, blacklist, applicationlist, rejectlist, loginTime, lastLoginTime, created_at,
+            ])
+            ctx.status = 200
+            ctx.body = {
+                code: 200,
+                success: true,
+                msg: '注册成功',
+            }
+        } catch (error) {
+            ctx.status = 400
+            ctx.body = {
+                code: 200,
+                success: false,
+                msg: error,
+            }
+        }
     },
     // 用户登录
     userLogin: async (ctx) => {
-        // const user_id = 'wangwu_user_id';
-        const username = '王五';
-        const password = '123456'; // 加密
-        let rs = await db.query("select * from users where username =? and password =?", [username, password]);
-        if (rs[0].length > 0) {
-            ctx.body = '登录成功'
-        } else {
-            ctx.body = '登录失败'
+        const { username, password } = ctx.request.body
+        try {
+            let rs = await db.query("select * from users where username =?", [username]);
+            if (rs[0].length > 0) {
+                let res
+                for (let i = 0; i < rs[0].length; i++) {
+                    const user = rs[0][i];
+                    if (user.password == password) {
+                        res = {
+                            code: 200,
+                            success: true,
+                            msg: '登录成功',
+                            data: {
+                                ...user,
+                                token: jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' })
+                            }
+                        };
+                        found = true;
+                        break; // 跳出循环
+                    } else {
+                        res = {
+                            code: 204,
+                            success: false,
+                            msg: '密码错误',
+                        };
+                    }
+                }
+                ctx.body = res;
+            } else {
+                ctx.body = {
+                    code: 202,
+                    success: false,
+                    msg: '用户不存在',
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     },
     // 添加好友
