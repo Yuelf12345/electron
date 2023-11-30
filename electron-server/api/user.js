@@ -65,7 +65,8 @@ const user = {
                             msg: '登录成功',
                             data: {
                                 ...user,
-                                token: jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' })
+                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '1h' }),
+                                refresh_token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '24h' })
                             }
                         };
                         found = true;

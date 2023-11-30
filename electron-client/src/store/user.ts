@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { IUserInfo } from "@/utils/types"
 import { Login, Register } from "@/api/user"
+import router from '@/router'
 
 const userStore = defineStore('user', {
     state: () => ({
@@ -12,6 +13,15 @@ const userStore = defineStore('user', {
             gender: 1,
             birthday: '',
             avatar: '',
+            friends: [],
+            blacklist: [],
+            applicationList: [],
+            rejectList: [],
+            loginTime: '',
+            lastLoginTime: '',
+            created_at: '',
+            token: '',
+            refresh_token: '',
         }
     }),
     actions: {
@@ -19,6 +29,13 @@ const userStore = defineStore('user', {
             let res
             if (isLogin) {
                 res = await Login(userInfo)
+                let data = res.data
+                if (data.success) {
+                    this.userInfo = data.data
+                    localStorage.setItem('y_t', data.data.token)
+                    localStorage.setItem('y_r_t', data.data.refresh_token)
+                    router.push('/')
+                }
             } else {
                 res = await Register(userInfo)
             }

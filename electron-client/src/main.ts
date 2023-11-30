@@ -6,15 +6,15 @@ import 'element-plus/dist/index.css';
 import * as ElIconModules from "@element-plus/icons-vue";
 
 import App from './App.vue'
-
+import sild from './utils/slid'
 import { createPinia } from "pinia"
 const store = createPinia()
 
 import router from './router'
-
+import './router/permission'
 
 const app = createApp(App);
-
+sild(app)
 for (let iconName in ElIconModules) {
     if (Reflect.has(ElIconModules, iconName)) {
         app.component(iconName, ElIconModules[iconName])
