@@ -2,8 +2,8 @@
     <div class="container">
         <div class="content">
             <div class="user-info">
-                <el-avatar shape="square" :size="50" src="" />
-                <span>张三</span>
+                <el-avatar shape="square" :size="50" :src="`http://localhost:3000${userInfo.avatar}`" />
+                <span>{{ userInfo.nickname }}</span>
             </div>
             <div class="friends-list">
                 <div class="friend-item" v-for="i in 20" v-slid>
@@ -29,6 +29,10 @@
 <script setup lang="ts">
 import Navbar from '@/components/navbar.vue'
 import Chats from '@/components/chats.vue'
+import useStore from '@/store'
+const { userStore, userStore: { userInfo } } = useStore()
+console.log('userStore', userStore, userInfo);
+
 </script>
 <style lang="scss" scoped>
 .container {
@@ -43,7 +47,6 @@ import Chats from '@/components/chats.vue'
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
     .content {
-        // overflow-y: auto;
         height: 90vh;
         border: 1px solid white;
         display: flex;
@@ -65,6 +68,7 @@ import Chats from '@/components/chats.vue'
 
         .friends-list {
             flex: 1;
+            min-width: 200px;
             width: 100%;
             overflow-y: scroll;
 
@@ -115,5 +119,4 @@ import Chats from '@/components/chats.vue'
 
         }
     }
-}
-</style>
+}</style>

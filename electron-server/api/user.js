@@ -15,6 +15,38 @@ let db;
 
 console.log('db', db);
 const user = {
+    // 刷新token
+    refreshToken: async (ctx) => {
+        const token = ctx.header.authorization.replace('Bearer ', '');
+        try {
+            decoded = jwt.verify(token, 'yCharts');
+            console.log('decoded', decoded);
+            const expirationDate = decoded.exp;
+            const username = decoded.username;
+            const now = new Date() / 1000;
+            const timedeltaDate = expirationDate - now;
+            if (timedeltaDate < 0) {
+                console.log('refreshtoken失效');
+                ctx.body = {
+                    code: 401,
+                    msg: 'refreshtoken失效'
+                }
+                return;
+            } else {
+                console.log('refreshtoken 距离过期', timedeltaDate / 60 / 60, 'h');
+                ctx.body = {
+                    code: 200,
+                    msg: 'refreshtoken有效,刷新成功',
+                    token: jwt.sign({ username: username }, 'yCharts', { expiresIn: 10*60*1000 }),
+                }
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 401,
+                msg: 'refreshtoken失效'
+            }
+        }
+    },
     // 注册
     userRegister: async (ctx) => {
         const { username, password } = ctx.request.body
@@ -65,7 +97,7 @@ const user = {
                             msg: '登录成功',
                             data: {
                                 ...user,
-                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '1h' }),
+                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: 10*60*1000 }),
                                 refresh_token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '24h' })
                             }
                         };

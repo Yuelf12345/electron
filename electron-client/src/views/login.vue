@@ -42,6 +42,7 @@
           </label>
           <a href="#">Forgot Password?</a>
         </div>
+        <div v-else style="height:50px"></div>
         <button @click="login" class="form__submit" ref="submit">{{ isLogin ? "Log In" : "Create an account" }}</button>
       </form>
       <p class="form__footer">

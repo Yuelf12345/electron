@@ -2,7 +2,8 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const KoaStatic = require('koa-static');
 const {koaBody} = require('koa-body');
-const User = require('./api/user')    
+const User = require('./api/user')
+const checkToken = require('./middleware/checkToken')
 // const mysql = require('mysql2/promise');
 
 // let db;
@@ -18,9 +19,9 @@ const User = require('./api/user')
 
 // console.log('db',db);
 
-
 const app = new Koa();
 const router = new Router();
+app.use(checkToken)
 app.use(koaBody());
 app.use(KoaStatic(__dirname + '/public'));
 app.use(router.routes());
@@ -28,6 +29,7 @@ app.use(router.routes());
 router.get('/',ctx=>{
     ctx.body = `<h1>Hello World</h1>`
 })
+router.get('/refresh_token',User.refreshToken)
 // 注册
 router.post('/register', User.userRegister)
 router.post('/login', User.userLogin)

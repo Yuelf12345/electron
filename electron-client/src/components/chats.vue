@@ -33,7 +33,9 @@
             </div>
         </div>
         <div class="chat-input">
-            <div class="card">
+            <div>按钮</div>
+            <div class="chat-input-text">
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae autem aliquam reprehenderit facilis iusto soluta, quia officia, aliquid pariatur ea distinctio. Blanditiis dolorum, odit quae consectetur neque possimus adipisci perferendis!
             </div>
         </div>
     </div>
@@ -41,18 +43,18 @@
 
 <script setup lang="ts"></script>
 <style lang="scss" scoped>
+@function r($px) {
+    @return calc(round($px * 1000 / 32) / 1000 * 1rem);
+}
+
 .chats {
+    flex: 1;
     padding: 10px;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    @function r($px) {
-        @return round($px *1000 / 32) / 1000 * 1rem;
-    }
-
     $borderWidth: 0.0703rem;
-
     pre {
         margin: 0;
         font-family: inherit;
@@ -60,10 +62,9 @@
         white-space: pre-wrap;
         //word-break: initial;
     }
-    .chat-list{
+    .chat-list {
         flex: 1;
     }
-
     .message {
         margin-bottom: r(40);
         float: left;
@@ -253,14 +254,21 @@
     }
 }
 
-.card {
+.chat-input {
     background-color: #fff;
     border-radius: 20px;
-    box-shadow: 0px 1.5px 5.4px rgba(0, 0, 0, 0.054), 0px 3.7px 10.9px rgba(0, 0, 0, 0.068), 0px 7px 16.8px rgba(0, 0, 0, 0.074), 0px 12.5px 24.6px rgba(0, 0, 0, 0.076), 0px 23.4px 38.1px rgba(0, 0, 0, 0.08), 0px 56px 80px rgba(0, 0, 0, 0.1);
-    height: 76px;
+    min-height: 76px;
     margin-top: 16vh;
     transition: height 400ms;
     -webkit-tap-highlight-color: #00000010;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    .chat-input-text {
+        max-width: 100%;
+        font-size: 20px;
+        word-wrap: break-word;
+    }
 }
 </style>

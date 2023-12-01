@@ -95,3 +95,11 @@
 - 聊天界面
 - 引入router guard
 - slid自定义指令
+
+# 12-1 客户端设计(client端)
+- 使用refresh token实现无感登录
+- 使用Promise处理刷新token并发情况
+- AxiosRequestConfig接口泛型重新定义
+
+# 12-1 服务接口实现(server端)
+- token刷新接口

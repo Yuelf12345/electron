@@ -29,17 +29,17 @@ const userStore = defineStore('user', {
             let res
             if (isLogin) {
                 res = await Login(userInfo)
-                let data = res.data
-                if (data.success) {
-                    this.userInfo = data.data
-                    localStorage.setItem('y_t', data.data.token)
-                    localStorage.setItem('y_r_t', data.data.refresh_token)
+                console.log('res',res);
+                if (res.success) {
+                    this.userInfo = res.data
+                    localStorage.setItem('y_t', res.data.token)
+                    localStorage.setItem('y_r_t', res.data.refresh_token)
                     router.push('/')
                 }
             } else {
                 res = await Register(userInfo)
             }
-            return res.data;
+            return res;
         }
     }
 })
