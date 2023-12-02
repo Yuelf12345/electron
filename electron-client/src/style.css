@@ -1,0 +1,16 @@
+.el-textarea__inner {
+    resize: none !important;
+    outline: #fff dashed;
+    border: #fff !important;
+    box-shadow:none !important;
+    color: black !important;
+}
+.el-textarea__inner::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.el-textarea__inner::-webkit-scrollbar {
+    width: 4px;
+    height: 8px;
+    background-color: white;
+}

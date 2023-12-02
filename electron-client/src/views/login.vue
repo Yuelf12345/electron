@@ -80,8 +80,8 @@ const isLogin = ref<boolean>(true);
 const togglePassword = ref<boolean>(false);
 
 const userInfo = reactive<IUserInfo>({
-  username: "",
-  password: "",
+  username: "yue",
+  password: "123",
 });
 const login = async () => {
   if (!userInfo.username) {

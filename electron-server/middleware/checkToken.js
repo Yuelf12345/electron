@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 const checkToken = async (ctx, next) => {
-    console.log('ctx', ctx.url);
-    if (!ctx.url.includes('/avatar')) {
+    console.log('ctx', ctx.url,ctx.header.authorization == undefined);
+    if (!ctx.url.includes('/avatar') && ctx.header.authorization != undefined) {
         let token = ctx.header.authorization.replace('Bearer ', '')
         console.log('token', token, token == 'null');
         if (token !== 'null') {
@@ -13,7 +13,9 @@ const checkToken = async (ctx, next) => {
                 const expirationDate = decoded.exp;
                 const now = new Date() / 1000;
                 const timedeltaDate = expirationDate - now;
+                console.log(0);
                 if (timedeltaDate < 0) { // 30 minutes
+                    console.log(1);
                     console.log('Token 过期', timedeltaDate * 60 * 1000);
                     ctx.body = {
                         code: 401,
@@ -21,8 +23,8 @@ const checkToken = async (ctx, next) => {
                     }
                     return;
                 } else {
+                    console.log(2);
                     // console.log('Token 距离过期', timedeltaDate/60/60,'h');
-                //    return;
                 }
             } catch (error) {
                 console.log('jwt', jwt);
@@ -34,6 +36,7 @@ const checkToken = async (ctx, next) => {
                 return;
             }
         }
+       console.log();
     }
     await next();
 }

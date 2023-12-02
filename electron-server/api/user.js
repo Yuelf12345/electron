@@ -37,7 +37,7 @@ const user = {
                 ctx.body = {
                     code: 200,
                     msg: 'refreshtoken有效,刷新成功',
-                    token: jwt.sign({ username: username }, 'yCharts', { expiresIn: 10*60*1000 }),
+                    token: jwt.sign({ username: username }, 'yCharts', { expiresIn: 10 * 60 * 1000 }),
                 }
             }
         } catch (error) {
@@ -54,7 +54,7 @@ const user = {
         const nickname = username;
         const gender = 1;
         const birthday = new Date();
-        const avatar = `/img/default_avatar/avatar${Math.floor(Math.random() * 10) + 1}.webp`;
+        const avatar = `/img/default_avatar/avatar${Math.floor(Math.random() * 10)}.webp`;
         const friends = JSON.stringify([]);
         const blacklist = JSON.stringify([]);
         const applicationlist = JSON.stringify([]);
@@ -97,7 +97,7 @@ const user = {
                             msg: '登录成功',
                             data: {
                                 ...user,
-                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: 10*60*1000 }),
+                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: 10 * 60 * 1000 }),
                                 refresh_token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '24h' })
                             }
                         };
@@ -145,35 +145,15 @@ const user = {
     },
     // 获取好友列表
     getFriends: async (ctx) => {
-        const user_id = 'zhangsan_user_id';
-        let rs = await db.query("select friends_id,friend_nickname,friend_avatar from friends where user_id =?", [user_id]);
-        console.log(rs);
-        ctx.body = JSON.stringify(rs[0]);
-    },
-    // 添加好友聊天记录
-    addChat: async (ctx) => {
-        const chat_id = 'zhangsan_to_lisi';
-        const sender_id = 'zhangsan_user_id';
-        const receiver_id = 'lisi_user_id';
-        const chat_message = '[{"sender_id":"zhangsan_user_id","chat_message":"你好"},{"receiver_id":"lisi_user_id","chat_message":"你好你吗"}]';
-        const chat_datetime = new Date();
-        const created_at = new Date();
-        const deleted_at = new Date();
-        const isDel = 1;
-        let rs = await db.query("insert into `chats` (`chat_id`,`sender_id`,`receiver_id`,`chat_message`,`chat_datetime`,`created_at`,`deleted_at`,`isDel`) value (?,?,?,?,?,?,?,?)", [
-            chat_id, sender_id, receiver_id, chat_message, chat_datetime, created_at, deleted_at, isDel,
-        ])
-        ctx.body = '聊天';
-    },
-    // 获取好友聊天记录
-    getChat: async (ctx) => {
-        const sender_id = 'zhangsan_user_id';
-        const receiver_id = 'lisi_user_id';
-        let rs = await db.query("select * from chats where sender_id =? and receiver_id =? and isDel = 1 order by chat_datetime desc", [sender_id, receiver_id]);
-        if (rs[0].length > 0) {
-            ctx.body = re[0].chat_message
-        } else {
-            ctx.body = '无记录'
+        const { user_id } = ctx.request.body
+        console.log('user_id', user_id);
+        // select u2.* f.created_at
+        let rs = await db.query("select u2.* from users u1 JOIN friends f ON u1.user_id = f.user_id JOIN users u2 ON f.friends_id = u2.user_id where u1.user_id =?", [user_id]);
+        ctx.body = {
+            code: 200,
+            success: true,
+            msg: '获取好友列表成功',
+            data: rs[0]
         }
     }
 }

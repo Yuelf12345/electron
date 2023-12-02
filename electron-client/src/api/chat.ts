@@ -1,24 +1,24 @@
 import request from "@/utils/server";
 
-export const Login = (data: any) => {
+export const addChat = (data: any) => {
     return request({
-        url: "/login",
+        url: "/addChat",
         method: "post",
         data
     });
 };
 
-export const Register = (data: any) => {
+export const saveChat = (data: any) => {
     return request({
-        url: "/register",
+        url: "/saveChat",
         method: "post",
         data
     });
 };
 
-export const getFriends = (data: any) => {
+export const getChat = (data: any) => {
     return request({
-        url: "/getFriends",
+        url: "/getChat",
         method: "post",
         data
     });
