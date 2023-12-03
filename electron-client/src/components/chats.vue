@@ -1,6 +1,5 @@
 <template>
     <div class="chats" v-if="friendInfo.user_id">
-        {{ chatStore.chatHistory }}
         <div class="chat-list" ref="chatContent">
             <div>
                 <div v-for=" (item, index) in chatHistory" :key="index">
