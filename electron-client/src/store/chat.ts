@@ -13,6 +13,7 @@ const chatStore = defineStore('chat', {
             birthday: '',
             avatar: '',
         },
+        recentlyEmojis:[],
         chatHistory: [] as any[],
         chatMap: {} as any,
     }),
@@ -26,10 +27,10 @@ const chatStore = defineStore('chat', {
         // 保存聊天记录
         async setChatHistory(data: any) {
             this.chatHistory.push(data)
-            // let res = await addChat({
-            //     user_id: this.user_id, friendInfo: this.friendInfo, chatHistory: this.chatHistory
-            // })
-            // console.log('----', res);
+            let res = await addChat({
+                user_id: this.user_id, friendInfo: this.friendInfo, chatHistory: this.chatHistory
+            })
+            console.log('----', res);
 
         }
     }

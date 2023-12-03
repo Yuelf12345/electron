@@ -37,10 +37,11 @@ const user = {
                 ctx.body = {
                     code: 200,
                     msg: 'refreshtoken有效,刷新成功',
-                    token: jwt.sign({ username: username }, 'yCharts', { expiresIn: 10 * 60 * 1000 }),
+                    token: jwt.sign({ username: username }, 'yCharts', { expiresIn: '10s' }),
                 }
             }
         } catch (error) {
+            console.log('没有刷新token');
             ctx.body = {
                 code: 401,
                 msg: 'refreshtoken失效'
@@ -97,7 +98,7 @@ const user = {
                             msg: '登录成功',
                             data: {
                                 ...user,
-                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: 10 * 60 * 1000 }),
+                                token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn:'10s'}),
                                 refresh_token: jwt.sign({ username: user.username }, 'yCharts', { expiresIn: '24h' })
                             }
                         };

@@ -37,6 +37,10 @@ const service: AxiosInstance = axios.create({
 // 请求拦截
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    console.log('config.url',config.url); 
+    if (config.url.indexOf('/refresh_token') === -1) {
+      config.headers.Authorization = `Bearer ${localStorage.getItem('y_t')}`;
+    }
     return config;
   },
   (error: ResponseError) => {
@@ -65,6 +69,11 @@ service.interceptors.response.use(
     // 刷新token
     if (response.data.code === 401 && isRefreshToken(response.config)) {
       console.log('!token过期');
+      if(!localStorage.getItem('y_r_t')){
+        console.log('没有refreshtoken');
+        router.push('/login');
+        return;
+      }
       const isSuccess = await refreshToken();
       console.log('isSuccess', isSuccess);
       if (isSuccess) {

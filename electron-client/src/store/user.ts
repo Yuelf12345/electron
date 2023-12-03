@@ -42,6 +42,7 @@ const userStore = defineStore('user', {
                             this.connected = true
                             this.socket_id = res.id
                         }
+                        
                     })
                     router.push('/')
                     this.friends()

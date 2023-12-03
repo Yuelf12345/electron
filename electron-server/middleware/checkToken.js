@@ -1,21 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 const checkToken = async (ctx, next) => {
-    console.log('ctx', ctx.url,ctx.header.authorization == undefined);
-    if (!ctx.url.includes('/avatar') && ctx.header.authorization != undefined) {
+    if (!ctx.url.includes('/avatar') &&!ctx.url.includes('/login')  && ctx.header.authorization != undefined) {
         let token = ctx.header.authorization.replace('Bearer ', '')
-        console.log('token', token, token == 'null');
+        console.log('请求头是否携带token', token);
         if (token !== 'null') {
             try {
-                console.log('ctx', ctx.url);
+                console.log('请求接口', ctx.url);
                 decoded = jwt.verify(token, 'yCharts');
-                console.log('decoded', decoded);
                 const expirationDate = decoded.exp;
                 const now = new Date() / 1000;
                 const timedeltaDate = expirationDate - now;
-                console.log(0);
                 if (timedeltaDate < 0) { // 30 minutes
-                    console.log(1);
                     console.log('Token 过期', timedeltaDate * 60 * 1000);
                     ctx.body = {
                         code: 401,
@@ -23,11 +19,9 @@ const checkToken = async (ctx, next) => {
                     }
                     return;
                 } else {
-                    console.log(2);
-                    // console.log('Token 距离过期', timedeltaDate/60/60,'h');
+                    console.log('Token 距离过期', timedeltaDate/60/60,'h');
                 }
             } catch (error) {
-                console.log('jwt', jwt);
                 console.log('过期了', error);
                 ctx.body = {
                     code: 401,
@@ -35,8 +29,14 @@ const checkToken = async (ctx, next) => {
                 }
                 return;
             }
+        }else{
+            console.log('没有携带token',token);
+            ctx.body = {
+                code: 401,
+                msg: '未登录'
+            }
+            return
         }
-       console.log();
     }
     await next();
 }

@@ -4,10 +4,13 @@ import { BASE_IMG_URL } from "@/config";
 let promise: null | Promise<any>;
 
 export const refreshToken = async () => {
+  console.log('promise',promise);
+  
   if (promise) {
     return promise;
   }
   promise = new Promise(async (resolve) => {
+    console.log('localStorage.getItem("y_r_t")',localStorage.getItem("y_r_t"));
     const resp: any = await request.get("/refresh_token", {
       headers: {
         "Authorization": localStorage.getItem("y_r_t")

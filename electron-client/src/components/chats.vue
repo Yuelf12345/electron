@@ -1,37 +1,42 @@
 <template>
-    <div class="chats">
-        <div class="chat-list">
-            <div v-for=" (item, index) in chatHistory" :key="index">
-                <div class="message others" v-if="item.sender != userInfo.user_id">
-                    <div class="avatar">
-                        <el-avatar :src="imgUrl(friendInfo.avatar)" />
-                    </div>
-                    <div class="content">
-                        <p class="author_name">{{ friendInfo.nickname }}</p>
-                        <div class="bubble  bubble_default left">
-                            <div class="bubble_cont">
-                                <div class="plain">
-                                    <pre>{{ item.msg }}</pre>
+    <div class="chats" v-if="friendInfo.user_id">
+        {{ chatStore.chatHistory }}
+        <div class="chat-list" ref="chatContent">
+            <div>
+                <div v-for=" (item, index) in chatHistory" :key="index">
+                    <div class="message others" v-if="item.sender != userInfo.user_id">
+                        <div class="avatar">
+                            <el-avatar :src="imgUrl(friendInfo.avatar)" />
+                        </div>
+                        <div class="content">
+                            <p class="author_name">{{ friendInfo.nickname }}</p>
+                            <div class="bubble  bubble_default left">
+                                <div class="bubble_cont">
+                                    <div class="plain">
+                                        <pre>{{ item.msg }}</pre>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="message me" v-else>
-                    <div class="avatar">
-                        <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
-                    </div>
-                    <div class="content">
-                        <div class="bubble  bubble_primary right">
-                            <div class="bubble_cont">
-                                <div class="plain">
-                                    <pre>{{ item.msg }}</pre>
+                    <div class="message me" v-else>
+                        <div class="avatar">
+                            <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
+                        </div>
+                        <div class="content">
+                            <div class="bubble  bubble_primary right">
+                                <div class="bubble_cont">
+                                    <div class="plain">
+                                        <div v-if="item.type == 1" v-html="item.msg"></div>
+                                        <img v-if="item.type == 2" :src="item.msg" alt="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
         <div class="chat-input" @click.stop="handleClick('input')">
             <div class="chat-btns">
@@ -60,82 +65,169 @@
                 </el-icon>
             </div>
             <el-scrollbar max-height="400px">
-                <div v-show="inputType === 'input'" class="chat-input-text" @click="input1.focus()">
-                    <!-- <div>{{ msg }}</div> -->
-                    <el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4 }" v-model="msg" ref="input1"
-                        class="chat-input-text-input" @keyup.enter.capture="handleSendMsg" />
+                <div v-show="inputType === 'input'" class="chat-input-text" @click="inputMsg.focus()">
+                    <div id="msg-input" ref="inputMsg" class="chat-input-text-input" contenteditable="true"
+                        spellcheck="false" autofocus @click="msgInpuClick"></div>
                     <div style="display: flex;flex-direction: row-reverse;">
                         <el-button @click="handleSendMsg">发送(S)</el-button>
                     </div>
                 </div>
                 <div v-show="inputType === 'emoji'" class="chat-input-emoji">
+                    <div v-if="recentlyEmojis.length > 0">
+                        <span class="emoji-title">最近使用</span>
+                        <ul class="emoji-list">
+                            <li class="emoji-item" v-for="(i, index) in uniq(recentlyEmojis)" :key="index">
+                                <img :src="getImageUrl(i)" alt="emoji" loading="lazy" @click="handleEmojiClick(i)" />
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="emoji-title">全部表情</span>
                     <ul class="emoji-list">
                         <li class="emoji-item" v-for="i in 26" :key="i">
-                            <img :src="getImageUrl(i)" alt="emoji" loading="lazy" />
+                            <img :src="getImageUrl(i)" alt="emoji" loading="lazy" @click="handleEmojiClick(i)" />
                         </li>
                     </ul>
                 </div>
             </el-scrollbar>
         </div>
     </div>
+    <div class="empty" v-else>
+        <h1>yChats</h1>
+    </div>
 </template>
-
+    
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { FolderOpened } from '@element-plus/icons-vue'
-import { debounce } from 'lodash'
+import { debounce, uniq } from 'lodash'
 import { imgUrl } from '@/utils/util'
 import socket, { privatMsg } from '@/utils/io'
 import useStore from '@/store'
 const { chatStore, userStore: { userInfo } } = useStore()
-const { friendInfo, chatHistory }: any = storeToRefs(chatStore)
-const input1 = ref()
-const msg = ref()
-const inputType = ref('input')
+const { friendInfo, chatHistory, recentlyEmojis }: any = storeToRefs(chatStore)
+
+// 获取图片地址
+const getImageUrl = (name: number | unknown) => {
+    return new URL(`../assets/img/EMOJI${name}.png`, import.meta.url).href
+}
+
+// 聊天文本框
+const inputType = ref('input')  // 输入框类型
+const inputMsg = ref()          // 输入框内容
+let rangeInput: Range;          // 选中文本的范围
+
+const handleClick = (type: string) => {
+    inputType.value = type;
+}
+// const handleEmojiClick = (emoji: number|unknown) => {
+//     let emojiImg = `<img src="${getImageUrl(emoji)}" width="25" height="25" style="vertical-align: middle;" />`
+//     inputMsg.value.innerHTML += emojiImg;
+// }
+
+const msgInpuClick = (e: any) => {
+    let target = e.target;
+    setCaretForEmoji(target);
+}
+// 光标定位
+const setCaretForEmoji = (target: any) => {
+    if (target.tagName.toLowerCase() === "img") {
+        let range = new Range();
+        range.setStartBefore(target);
+        range.collapse(true);
+
+        let document = target.ownerDocument;
+        if (document) {
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(range);
+        }
+    }
+}
+
+const handleEmojiClick = (name: number | unknown) => {
+    let emojiImg = document.createElement("img");
+    emojiImg.style.width = "25px";
+    emojiImg.style.height = "25px";
+    emojiImg.src = getImageUrl(name)
+    if (!rangeInput) {
+        rangeInput = new Range();
+        rangeInput.selectNodeContents(inputMsg.value);
+    }
+    if (rangeInput.collapsed) {
+        rangeInput.insertNode(emojiImg);
+    } else {
+        rangeInput.deleteContents();
+        rangeInput.insertNode(emojiImg);
+    }
+    rangeInput.collapse(false);
+
+    // 记录最近使用表情
+    if (recentlyEmojis.value.length > 10) {
+        recentlyEmojis.value.shift()
+    }
+    recentlyEmojis.value.push(name)
+}
+
+// 监听选中表情
+document.onselectionchange = () => {
+    let selection: any = document.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        if (inputMsg.value.contains(range.commonAncestorContainer)) {
+            rangeInput = range;
+        }
+    }
+};
+
+
 const handleSendMsg = debounce(() => {
-    if (!msg.value) return
+    const msg = inputMsg.value.innerHTML;
+    if (!msg) return
     let data = {
+        type: 1,// 1 文本 2 图片 3 语音 4 视频 5 文件
         sender: userInfo.user_id,
         receiver: friendInfo.value.user_id,
-        msg: msg.value
+        msg: msg
     }
     privatMsg(data)
-    console.log('发送成功', data);
-    chatStore.setChatHistory(data)
-    msg.value = ''
+    chatHistory.value.push(data)
+    inputMsg.value.innerHTML = ''
 }, 500)
 
+// 初始化聊天记录
 if (chatHistory.value.length == 0) {
     chatHistory.value = [
         {
+            type: 1,
             sender: friendInfo.value.user_id,
             receiver: userInfo.user_id,
             msg: '你好'
         }, {
+            type: 1,
             sender: userInfo.user_id,
             receiver: friendInfo.value.user_id,
             msg: '你好'
         }
     ]
 }
-
 socket.on('receiveMsg', (data: any) => {
     console.log('收到消息', data);
     chatHistory.value.push(data)
 });
 
-const handleClick = (type: string) => {
-    inputType.value = type;
-}
+// 滚动到底部
 watch(() => chatStore.chatHistory, () => {
-    console.log(2);
+    console.log(11111);
+    scrollToBottom()
+    // chatStore.setChatHistory(data)
 }, {
     deep: true
 })
-
-const getImageUrl = (name: number) => {
-    return new URL(`../assets/img/EMOJI${name}.png`, import.meta.url).href
+const chatContent = ref()
+const scrollToBottom = () => {
+    nextTick(() => {
+        chatContent.value.scrollTop = chatContent.value.scrollHeight - chatContent.value.offsetHeight
+    })
 }
 
 </script>
@@ -147,6 +239,16 @@ const getImageUrl = (name: number) => {
 ul {
     list-style: none;
     padding: 0 5px;
+}
+
+.empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    &>h1 {
+        margin: auto;
+    }
 }
 
 .chats {
@@ -168,10 +270,19 @@ ul {
 
     .chat-list {
         flex: 1;
+        height: 100%;
         overflow-y: scroll;
+        margin-bottom: 10px;
 
         &::-webkit-scrollbar {
             width: 0px;
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            clear: both;
+            height: 10px;
         }
     }
 
@@ -183,7 +294,6 @@ ul {
         .avatar {
             width: r(80);
             height: r(80);
-            margin-top: r(30);
             border-radius: 50%;
             overflow: hidden;
         }
@@ -368,7 +478,6 @@ ul {
     background-color: #fff;
     border-radius: 20px;
     min-height: 76px;
-    margin-top: 16vh;
     transition: height 400ms;
     -webkit-tap-highlight-color: #00000010;
     // margin-bottom: 20px;
@@ -391,6 +500,11 @@ ul {
     .chat-input-emoji {
         height: 100px;
         width: 100%;
+
+        .emoji-title {
+            font-size: 12px;
+            color: #8b8b8b;
+        }
 
         .emoji-list {
             display: flex;
@@ -424,6 +538,11 @@ ul {
             font-weight: bolder;
             outline: none;
             resize: none;
+
+            img {
+                width: 20px;
+                height: 20px;
+            }
 
             &::-webkit-scrollbar {
                 width: 0px;
