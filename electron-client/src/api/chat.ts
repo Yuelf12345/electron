@@ -1,16 +1,8 @@
 import request from "@/utils/server";
 
-export const addChat = (data: any) => {
+export const upDateChat = (data: any) => {
     return request({
-        url: "/addChat",
-        method: "post",
-        data
-    });
-};
-
-export const saveChat = (data: any) => {
-    return request({
-        url: "/saveChat",
+        url: "/upDateChat",
         method: "post",
         data
     });

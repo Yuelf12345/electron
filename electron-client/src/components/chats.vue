@@ -2,32 +2,36 @@
     <div class="chats" v-if="friendInfo.user_id">
         <div class="chat-list" ref="chatContent">
             <div>
-                <div v-for=" (item, index) in chatHistory" :key="index">
-                    <div class="message others" v-if="item.sender != userInfo.user_id">
-                        <div class="avatar">
-                            <el-avatar :src="imgUrl(friendInfo.avatar)" />
-                        </div>
-                        <div class="content">
-                            <p class="author_name">{{ friendInfo.nickname }}</p>
-                            <div class="bubble  bubble_default left">
-                                <div class="bubble_cont">
-                                    <div class="plain">
-                                        <pre>{{ item.msg }}</pre>
+                <div v-for=" (chats, index) in chatHistory" :key="index">
+                    <div class="chat-time">{{ chats.created_at }}</div>
+                    <div v-for="item in chats.chat_message">
+                        <div class="message others" v-if="item.sender != userInfo.user_id">
+                            <div class="avatar">
+                                <el-avatar :src="imgUrl(friendInfo.avatar)" />
+                            </div>
+                            <div class="content">
+                                <p class="author_name">{{ friendInfo.nickname }}</p>
+                                <div class="bubble  bubble_default left">
+                                    <div class="bubble_cont">
+                                        <div class="plain">
+                                            <div v-if="item.type == 1" v-html="item.msg"></div>
+                                            <img v-if="item.type == 2" :src="item.msg" alt="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="message me" v-else>
-                        <div class="avatar">
-                            <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
-                        </div>
-                        <div class="content">
-                            <div class="bubble  bubble_primary right">
-                                <div class="bubble_cont">
-                                    <div class="plain">
-                                        <div v-if="item.type == 1" v-html="item.msg"></div>
-                                        <img v-if="item.type == 2" :src="item.msg" alt="">
+                        <div class="message me" v-else>
+                            <div class="avatar">
+                                <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
+                            </div>
+                            <div class="content">
+                                <div class="bubble  bubble_primary right">
+                                    <div class="bubble_cont">
+                                        <div class="plain">
+                                            <div v-if="item.type == 1" v-html="item.msg"></div>
+                                            <img v-if="item.type == 2" :src="item.msg" alt="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -189,26 +193,28 @@ const handleSendMsg = debounce(() => {
         msg: msg
     }
     privatMsg(data)
-    chatHistory.value.push(data)
     inputMsg.value.innerHTML = ''
+    chatStore.setChatHistory(data)
+
 }, 500)
 
 // 初始化聊天记录
-if (chatHistory.value.length == 0) {
-    chatHistory.value = [
-        {
-            type: 1,
-            sender: friendInfo.value.user_id,
-            receiver: userInfo.user_id,
-            msg: '你好'
-        }, {
-            type: 1,
-            sender: userInfo.user_id,
-            receiver: friendInfo.value.user_id,
-            msg: '你好'
-        }
-    ]
-}
+// if (chatHistory.value.length == 0) {
+//     chatHistory.value = [
+//         {
+//             type: 1,
+//             sender: friendInfo.value.user_id,
+//             receiver: userInfo.user_id,
+//             msg: '你好'
+//         }, {
+//             type: 1,
+//             sender: userInfo.user_id,
+//             receiver: friendInfo.value.user_id,
+//             msg: '你好'
+//         }
+//     ]
+// }
+
 socket.on('receiveMsg', (data: any) => {
     console.log('收到消息', data);
     chatHistory.value.push(data)
@@ -216,9 +222,7 @@ socket.on('receiveMsg', (data: any) => {
 
 // 滚动到底部
 watch(() => chatStore.chatHistory, () => {
-    console.log(11111);
     scrollToBottom()
-    // chatStore.setChatHistory(data)
 }, {
     deep: true
 })
@@ -272,6 +276,12 @@ ul {
         height: 100%;
         overflow-y: scroll;
         margin-bottom: 10px;
+
+        .chat-time {
+            color: #b0b0b0;
+            font-size: 12px;
+            text-align: center;
+        }
 
         &::-webkit-scrollbar {
             width: 0px;

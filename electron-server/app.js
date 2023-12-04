@@ -48,8 +48,7 @@ router.post('/addFriends', User.addFriends)
 router.post('/getFriends', User.getFriends)
 
 // 聊天
-router.post('/addChat', Chat.addChat)
-router.post('/saveChat', Chat.saveChat)
+router.post('/upDateChat', Chat.upDateChat)
 router.post('/getChat', Chat.getChat)
 
 
