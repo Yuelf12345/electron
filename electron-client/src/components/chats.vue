@@ -1,5 +1,5 @@
 <template>
-    <div class="chats" v-if="friendInfo.user_id">
+    <div class="chats" v-if="friendInfo.user_id"  @keydown.enter="enterSendMsg">
         <div class="chat-list" ref="chatContent">
             <div>
                 <div v-for=" (chats, index) in chatHistory" :key="index">
@@ -70,7 +70,7 @@
             <el-scrollbar max-height="400px">
                 <div v-show="inputType === 'input'" class="chat-input-text" @click="inputMsg.focus()">
                     <div id="msg-input" ref="inputMsg" class="chat-input-text-input" contenteditable="true"
-                        spellcheck="false" autofocus @click="msgInpuClick"></div>
+                        spellcheck="false" autofocus @focusin="isFocused=true"  @focusout="isFocused=false" @click="msgInpuClick"></div>
                     <div style="display: flex;flex-direction: row-reverse;">
                         <el-button @click="handleSendMsg">发送(S)</el-button>
                     </div>
@@ -117,6 +117,7 @@ const getImageUrl = (name: number | unknown) => {
 
 // 聊天文本框
 const inputType = ref('input')  // 输入框类型
+const isFocused = ref(true)  // 输入框类型
 const inputMsg = ref()          // 输入框内容
 let rangeInput: Range;          // 选中文本的范围
 
@@ -182,6 +183,12 @@ document.onselectionchange = () => {
     }
 };
 
+const enterSendMsg = (e:any) => {
+    if (isFocused.value && e.keyCode === 13) {
+        e.preventDefault();
+        handleSendMsg()
+    }
+}
 
 const handleSendMsg = debounce(() => {
     const msg = inputMsg.value.innerHTML;
@@ -195,7 +202,6 @@ const handleSendMsg = debounce(() => {
     privatMsg(data)
     inputMsg.value.innerHTML = ''
     chatStore.setChatHistory(data)
-
 }, 500)
 
 // 初始化聊天记录
@@ -216,8 +222,7 @@ const handleSendMsg = debounce(() => {
 // }
 
 socket.on('receiveMsg', (data: any) => {
-    console.log('收到消息', data);
-    chatHistory.value.push(data)
+    chatStore.receiveChatHistory(data)
 });
 
 // 滚动到底部
@@ -489,7 +494,7 @@ ul {
     min-height: 76px;
     transition: height 400ms;
     -webkit-tap-highlight-color: #00000010;
-    // margin-bottom: 20px;
+    margin-bottom: 34px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -543,8 +548,7 @@ ul {
             padding: 0px;
             height: 100%;
             width: 100%;
-            font-size: 20px;
-            font-weight: bolder;
+            font-size: 18px;
             outline: none;
             resize: none;
 

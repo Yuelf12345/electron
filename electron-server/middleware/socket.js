@@ -9,9 +9,9 @@ const ioMiddleware = async (io) => {
             socketList[userId] = socket.id;
             console.log('socketList',socketList);
         });
-        socket.on('sendPrivateMsg', (data) => {
-            console.log('data', data);
-            socket.to(socketList[data.receiver]).emit('receiveMsg', data)
+        socket.on('sendPrivateMsg',async (data) => {
+            console.log('data11111', data);
+            await socket.to(socketList[data.receiver]).emit('receiveMsg', data)
         })
     });
 };
