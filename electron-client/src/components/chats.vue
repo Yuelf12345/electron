@@ -1,5 +1,5 @@
 <template>
-    <div class="chats" v-if="friendInfo.user_id"  @keydown.enter="enterSendMsg">
+    <div class="chat-content" @keydown.enter="enterSendMsg">
         <div class="chat-list" ref="chatContent">
             <div>
                 <div v-for=" (chats, index) in chatHistory" :key="index">
@@ -70,7 +70,8 @@
             <el-scrollbar max-height="400px">
                 <div v-show="inputType === 'input'" class="chat-input-text" @click="inputMsg.focus()">
                     <div id="msg-input" ref="inputMsg" class="chat-input-text-input" contenteditable="true"
-                        spellcheck="false" autofocus @focusin="isFocused=true"  @focusout="isFocused=false" @click="msgInpuClick"></div>
+                        spellcheck="false" autofocus @focusin="isFocused = true" @focusout="isFocused = false"
+                        @click="msgInpuClick"></div>
                     <div style="display: flex;flex-direction: row-reverse;">
                         <el-button @click="handleSendMsg">发送(S)</el-button>
                     </div>
@@ -93,9 +94,6 @@
                 </div>
             </el-scrollbar>
         </div>
-    </div>
-    <div class="empty" v-else>
-        <h1>yChats</h1>
     </div>
 </template>
     
@@ -183,7 +181,7 @@ document.onselectionchange = () => {
     }
 };
 
-const enterSendMsg = (e:any) => {
+const enterSendMsg = (e: any) => {
     if (isFocused.value && e.keyCode === 13) {
         e.preventDefault();
         handleSendMsg()
@@ -259,9 +257,8 @@ ul {
     }
 }
 
-.chats {
+.chat-content {
     flex: 1;
-    padding: 10px;
     height: 100%;
     display: flex;
     flex-direction: column;

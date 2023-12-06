@@ -4,7 +4,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'index',
-        redirect: '/home',
+        redirect: '/layouts',
         component: Layouts,
         children: [
             {
@@ -22,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'setting',
                 component: () => import('../views/setting.vue'),
             }]
+    },
+    {
+        path: '/layouts',
+        name: 'layouts',
+        component: () => import('../layouts/index.vue'),
     },
     {
         path: '/test',
