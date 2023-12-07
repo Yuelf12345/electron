@@ -15,3 +15,11 @@ export const getChat = (data: any) => {
         data
     });
 };
+
+export const getAllChat = (data: any) => {
+    return request({
+        url: "/getAllChat",
+        method: "post",
+        data
+    });
+};

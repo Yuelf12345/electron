@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { upDateChat, getChat } from "@/api/chat"
+import { upDateChat, getChat, getAllChat } from "@/api/chat"
 
 const chatStore = defineStore('chat', {
     state: () => ({
@@ -20,7 +20,7 @@ const chatStore = defineStore('chat', {
     }),
 
     actions: {
-        async setFriendInfo(friendInfo: any, user_id: string) { 
+        async setFriendInfo(friendInfo: any, user_id: string) {
             this.friendInfo = friendInfo
             this.user_id = user_id
             console.log('切换好友聊天记录', this.chatMap);
@@ -53,20 +53,28 @@ const chatStore = defineStore('chat', {
             console.log('更新聊天记录 ----->', res);
         },
 
-        receiveChatHistory(data:any){
+        receiveChatHistory(data: any) {
             console.log('所有聊天记录', this.chatMap);
             this.chatMap[data.sender] = this.chatMap[data.sender] || []
             this.chatMap[data.sender].push({
                 'chat_message': [data]
             })
-            if(data.sender != this.friendInfo.user_id){
+            if (data.sender != this.friendInfo.user_id) {
                 this.chatNumMap[data.sender] = this.chatNumMap[data.sender] || 0
                 this.chatNumMap[data.sender] += 1
             }
-            console.log('接收聊天记录',data);
+            console.log('接收聊天记录', data);
             console.log('接收聊天记录', this.chatNumMap);
             this.setChatHistory(data)
-        }
+        },
+
+        async getAllChatHistory(user_id: string, friends: any[]) {
+            let res = await getAllChat({
+                user_id: user_id, friends: friends
+            })
+            console.log('获取所有聊天记录 ----->', res);
+
+        },
     }
 })
 

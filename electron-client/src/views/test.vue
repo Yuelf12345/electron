@@ -1,23 +1,32 @@
 <template>
-  <div ref="element" @focusin="handleFocus" @focusout="handleBlur" contenteditable="true">聚焦元素</div>
+  <div class="container">
+    <div class="box">
+      <div class="item">
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      isFocused: false,
-    };
-  },
-  methods: {
-    handleFocus() {
-      this.isFocused = true;
-      console.log(1);
-    },
-    handleBlur() {
-      this.isFocused = false;
-      console.log(2);
-    },
-  },
-};
-</script>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  width: 100px;
+  align-content: center;
+  // justify-content: center;
+
+  .box {
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+  }
+
+  .item {
+    width: 40px;
+    height: 40px;
+    border: 1px solid red;
+  }
+  .box:hover{
+    width: 10px;
+  }
+}
+</style>

@@ -491,7 +491,6 @@ ul {
     min-height: 76px;
     transition: height 400ms;
     -webkit-tap-highlight-color: #00000010;
-    margin-bottom: 34px;
     padding: 10px;
     display: flex;
     flex-direction: column;

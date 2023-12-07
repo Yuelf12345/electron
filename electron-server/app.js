@@ -50,6 +50,7 @@ router.post('/getFriends', User.getFriends)
 // 聊天
 router.post('/upDateChat', Chat.upDateChat)
 router.post('/getChat', Chat.getChat)
+router.post('/getAllChat', Chat.getAllChat)
 
 
 // 使用app.callback()来处理请求,不然报错 （索引）:1 Uncaught (in promise) undefined

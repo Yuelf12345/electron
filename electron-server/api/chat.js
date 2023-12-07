@@ -35,7 +35,7 @@ const chat = {
         ])
         // 如果聊天记录存在，则更新聊天记录
         if (rs[0].length > 0) {
-            console.log('chat_message',chat_message);
+            console.log('chat_message', chat_message);
             await db.query("update `chats` set `chat_message` =?,`chat_datetime` =? where `sender_id` =? and `receiver_id` =? and `created_at` between? and? and `isDel` =?", [
                 chat_message, chat_datetime, sender_id, receiver_id, startTime, endTime, isDel])
         } else {
@@ -57,7 +57,7 @@ const chat = {
         const sender_id = user_id;
         const receiver_id = friendInfo.user_id;
         const isDel = 1;
-        const startTime = new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
+        const startTime = new Date().toLocaleDateString('zh-CN')
         const endTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
         let rs = await db.query("select * from `chats` where `sender_id` =? and `receiver_id` =? and `created_at` between? and? and `isDel` =? ORDER BY created_at ASC", [
             sender_id, receiver_id, startTime, endTime, isDel
@@ -84,6 +84,37 @@ const chat = {
                 msg: '获取成功,无聊天记录',
                 data: []
             }
+        }
+    },
+    // 获取所有好友聊天记录
+    getAllChat: async (ctx) => {
+        const { user_id, friends } = ctx.request.body
+        const startTime = new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
+        const endTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
+        console.log('startTime', startTime, endTime);
+        let friend_ids = friends.map(item => {
+            return item.user_id
+        })
+        let rs = await db.query("select * from `chats` where `sender_id` =? and `receiver_id` in (?) and `created_at` between? and? and `isDel` =?", [
+            user_id, friend_ids, startTime, endTime, 1
+        ])
+        let arr = rs[0];
+        let chatMap = {};
+        if (arr.length > 0) {
+            for (let i = 0; i < arr.length; i++) {
+                if (chatMap[(arr[i].receiver_id)] != undefined) {
+                    chatMap[arr[i].receiver_id].push(arr[i]);
+
+                } else {
+                    chatMap[arr[i].receiver_id]= [arr[i]];
+                }
+            }
+        }
+        ctx.body = {
+            code: 200,
+            success: true,
+            msg: '获取全部聊天记录成功',
+            data: chatMap
         }
     }
 }

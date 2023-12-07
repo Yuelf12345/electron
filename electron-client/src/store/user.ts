@@ -16,7 +16,7 @@ const userStore = defineStore('user', {
             gender: 1,
             birthday: '',
             avatar: '',
-            friends: [],
+            friends: [] as any[],
             blacklist: [],
             applicationList: [],
             rejectList: [],
@@ -25,7 +25,8 @@ const userStore = defineStore('user', {
             created_at: '',
             token: '',
             refresh_token: '',
-        }
+        },
+        bgColor:'#fff'
     }),
     actions: {
         async login(userInfo: IUserInfo, isLogin: boolean) {

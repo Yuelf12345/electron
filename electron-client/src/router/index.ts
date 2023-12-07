@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw, createWebHashHistory, } from 'vue-router'
-import Layouts from '../views/index.vue'
+import Layouts from '../layouts/index.vue'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'index',
-        redirect: '/layouts',
+        redirect: '/home',
         component: Layouts,
         children: [
             {
