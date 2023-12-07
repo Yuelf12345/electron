@@ -11,49 +11,132 @@
 //     console.log('Token 距离过期', timedeltaDate /60/60);
 // }
 
+// let arr = [
+//     {
+//         chat_id: 'aed6db54-b397-4d0f-ae14-9a772fd2185a',
+//         sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
+//         receiver_id: 'ea771619-8c9b-449b-be21-9bed4eb3080c',
+//         chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
+//         chat_datetime: '2023 - 12-05T15: 12:08.000Z',
+//         created_at:' 2023 - 12-07T15: 12:08.000Z',
+//         deleted_at: null,
+//         isDel: 1
+//     },
+//     {
+//         chat_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
+//         sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
+//         receiver_id: 'ea771619-8c9b-449b-be21-9bed4eb3080c',
+//         chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
+//         chat_datetime: '2023 - 12-05T15: 12: 12.000Z',
+//         created_at:' 2023 - 12-05T15: 12: 12.000Z',
+//         deleted_at: null,
+//         isDel: 1
+//     },
+//     {
+//         chat_id: 'e0a2a6f6-0db8-431a-8d83-892a823f8c94',
+//         sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
+//         receiver_id: '09aebf8d-f1ce-417f-a559-6dbabc066d7f',
+//         chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
+//         chat_datetime: '2023 - 12-05T15: 12: 12.000Z',
+//         created_at:' 2023 - 12-06T15: 11: 56.000Z',
+//         deleted_at: null,
+//         isDel: 1
+//     }
+// ]
+
+// let chatMap = {};
+// if (arr.length > 0) {
+//     for (let i = 0; i < arr.length; i++) {
+//         if (chatMap[(arr[i].receiver_id)] != undefined) {
+//             console.log(' chatMap[arr[i].receiver_id]', chatMap[arr[i].receiver_id]);
+//             chatMap[arr[i].receiver_id].push(arr[i]);
+
+//         } else {
+//             chatMap[arr[i].receiver_id]= [arr[i]];
+//         }
+//     }
+// }
+// console.log('chatMap',chatMap);
+
+
 let arr = [
     {
-        chat_id: 'aed6db54-b397-4d0f-ae14-9a772fd2185a',
-        sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
-        receiver_id: 'ea771619-8c9b-449b-be21-9bed4eb3080c',
-        chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
-        chat_datetime: '2023 - 12-05T15: 12:08.000Z',
-        created_at:' 2023 - 12-07T15: 12:08.000Z',
-        deleted_at: null,
-        isDel: 1
+        "chat_id": "80129c04-f44a-41e2-accf-9df06f33b676",
+        "sender_id": "c547e171-6567-4520-ac7e-4f032949d1b0",
+        "receiver_id": "ea771619-8c9b-449b-be21-9bed4eb3080c",
+        "chat_message": [
+            {
+                "msg": "qweqwe",
+                "type": 1,
+                "sender": "09aebf8d-f1ce-417f-a559-6dbabc066d7f",
+                "receiver": "c547e171-6567-4520-ac7e-4f032949d1b0"
+            },
+        ],
+        "chat_datetime": "2023-12-07T16:05:03.000Z",
+        "created_at": "2023-12-07T16:05:03.000Z",
+        "deleted_at": null,
+        "isDel": 1
     },
     {
-        chat_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
-        sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
-        receiver_id: 'ea771619-8c9b-449b-be21-9bed4eb3080c',
-        chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
-        chat_datetime: '2023 - 12-05T15: 12: 12.000Z',
-        created_at:' 2023 - 12-05T15: 12: 12.000Z',
-        deleted_at: null,
-        isDel: 1
+        "chat_id": "aed6db54-b397-4d0f-ae14-9a772fd2185a",
+        "sender_id": "c547e171-6567-4520-ac7e-4f032949d1b0",
+        "receiver_id": "ea771619-8c9b-449b-be21-9bed4eb3080c",
+        "chat_message": [
+            {
+                "msg": "zxc",
+                "type": 1,
+                "sender": "c547e171-6567-4520-ac7e-4f032949d1b0",
+                "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"
+            }
+        ],
+        "chat_datetime": "2023-12-05T15:12:08.000Z",
+        "created_at": "2023-12-07T15:12:08.000Z",
+        "deleted_at": null,
+        "isDel": 1
     },
     {
-        chat_id: 'e0a2a6f6-0db8-431a-8d83-892a823f8c94',
-        sender_id: 'c547e171-6567-4520-ac7e-4f032949d1b0',
-        receiver_id: '09aebf8d-f1ce-417f-a559-6dbabc066d7f',
-        chat_message: [{"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}, {"msg": "zxc", "type": 1, "sender": "c547e171-6567-4520-ac7e-4f032949d1b0", "receiver": "ea771619-8c9b-449b-be21-9bed4eb3080c"}],
-        chat_datetime: '2023 - 12-05T15: 12: 12.000Z',
-        created_at:' 2023 - 12-06T15: 11: 56.000Z',
-        deleted_at: null,
-        isDel: 1
+        "chat_id": "c547e171-6567-4520-ac7e-4f032949d1b0",
+        "sender_id": "c547e171-6567-4520-ac7e-4f032949d1b0",
+        "receiver_id": "ea771619-8c9b-449b-be21-9bed4eb3080c",
+        "chat_message": [
+            {
+                "msg": "qweqwe",
+                "type": 1,
+                "sender": "09aebf8d-f1ce-417f-a559-6dbabc066d7f",
+                "receiver": "c547e171-6567-4520-ac7e-4f032949d1b0"
+            },
+            {
+                "msg": "asssssssssssssssss",
+                "type": 1,
+                "sender": "c547e171-6567-4520-ac7e-4f032949d1b0",
+                "receiver": "09aebf8d-f1ce-417f-a559-6dbabc066d7f"
+            },
+            {
+                "msg": "qw",
+                "type": 1,
+                "sender": "c547e171-6567-4520-ac7e-4f032949d1b0",
+                "receiver": "09aebf8d-f1ce-417f-a559-6dbabc066d7f"
+            },
+            {
+                "msg": "asd",
+                "type": 1,
+                "sender": "c547e171-6567-4520-ac7e-4f032949d1b0",
+                "receiver": "09aebf8d-f1ce-417f-a559-6dbabc066d7f"
+            },
+            {
+                "msg": "qwe",
+                "type": 1,
+                "sender": "c547e171-6567-4520-ac7e-4f032949d1b0",
+                "receiver": "09aebf8d-f1ce-417f-a559-6dbabc066d7f"
+            }
+        ],
+        "created_at": "2023-12-05T15:12:12.000Z",
     }
-]
+].sort((a, b) => {
+    return new Date(a.created_at) - new Date(b.created_at);
+  });
 
-let chatMap = {};
-if (arr.length > 0) {
-    for (let i = 0; i < arr.length; i++) {
-        if (chatMap[(arr[i].receiver_id)] != undefined) {
-            console.log(' chatMap[arr[i].receiver_id]', chatMap[arr[i].receiver_id]);
-            chatMap[arr[i].receiver_id].push(arr[i]);
-
-        } else {
-            chatMap[arr[i].receiver_id]= [arr[i]];
-        }
-    }
+for (let index = 0; index < arr.length; index++) {
+    const element = arr[index];
+    console.log(element.created_at);
 }
-console.log('chatMap',chatMap);

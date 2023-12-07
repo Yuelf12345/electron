@@ -30,7 +30,7 @@
             </div>
             <div class="body-content">
                 <div class="friends">
-                    <div class="friend" v-for="(friend) in friends">
+                    <div class="friend" v-for="(friend) in friends" @click="friendClick(friend)">
                         <div class="friend-avatar">
                             <el-avatar :size="45" :src="imgUrl(friend.avatar)" />
                         </div>
@@ -40,11 +40,11 @@
                                     <span>{{ friend.nickname }}</span>
                                 </div>
                                 <div class="friend-message">
-                                    <span>message</span>
+                                    <span>{{ lastMsg(friend.user_id) }}</span>
                                 </div>
                             </div>
-                            <div class="unread-message">
-                                3
+                            <div class="unread-message" v-if="chatNumMap[friend.user_id] > 0">
+                                {{ chatNumMap[friend.user_id] }}
                             </div>
                         </div>
                     </div>
@@ -56,15 +56,33 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import useStore from '@/store';
 import { storeToRefs } from 'pinia'
 import { imgUrl } from '@/utils/util'
+import { fr } from 'element-plus/es/locale/index.js';
 const search = ref('')
-const { userStore,chatStore } = useStore()
+const { userStore, chatStore } = useStore()
 const { userInfo, bgColor } = storeToRefs(userStore)
+const { chatMap, chatNumMap } = storeToRefs(chatStore)
+console.log('chatMap', chatMap);
+
+const lastMsg = (id: string) => {
+    let chat;
+    if (chatMap.value[id]) {
+        const chats = chatMap.value[id][chatMap.value[id].length - 1]
+        chat = chats.chat_message[chats.chat_message.length - 1]
+        if (chat) {
+            return chat.msg
+        }
+    }
+}
+const friendClick = (data: any) => {
+    chatStore.setFriendInfo(data)
+}
+
 const friends = ref(userInfo.value.friends)
-chatStore.getAllChatHistory(userInfo.value.user_id,userInfo.value.friends)
+chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
 </script>
 
 <style lang="scss" scoped>
@@ -186,7 +204,8 @@ chatStore.getAllChatHistory(userInfo.value.user_id,userInfo.value.friends)
                         font-size: calc(25px * 0.618);
                         color: #5a4ae8;
                     }
-                    .unread-message{
+
+                    .unread-message {
                         width: 1.5rem;
                         height: 1.5rem;
                         border-radius: 50%;

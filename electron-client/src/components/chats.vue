@@ -1,9 +1,9 @@
 <template>
     <div class="chat-content" @keydown.enter="enterSendMsg">
         <div class="chat-list" ref="chatContent">
-            <div>
+            <el-scrollbar height="400px">
                 <div v-for=" (chats, index) in chatHistory" :key="index">
-                    <div class="chat-time">{{ chats.created_at }}</div>
+                    <div class="chat-time">{{ new Date(chats.chat_datetime).toLocaleString() }}</div>
                     <div v-for="item in chats.chat_message">
                         <div class="message others" v-if="item.sender != userInfo.user_id">
                             <div class="avatar">
@@ -38,8 +38,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </el-scrollbar>
         </div>
         <div class="chat-input" @click.stop="handleClick('input')">
             <div class="chat-btns">
@@ -201,23 +200,6 @@ const handleSendMsg = debounce(() => {
     inputMsg.value.innerHTML = ''
     chatStore.setChatHistory(data)
 }, 500)
-
-// 初始化聊天记录
-// if (chatHistory.value.length == 0) {
-//     chatHistory.value = [
-//         {
-//             type: 1,
-//             sender: friendInfo.value.user_id,
-//             receiver: userInfo.user_id,
-//             msg: '你好'
-//         }, {
-//             type: 1,
-//             sender: userInfo.user_id,
-//             receiver: friendInfo.value.user_id,
-//             msg: '你好'
-//         }
-//     ]
-// }
 
 socket.on('receiveMsg', (data: any) => {
     chatStore.receiveChatHistory(data)

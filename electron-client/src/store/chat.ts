@@ -20,9 +20,8 @@ const chatStore = defineStore('chat', {
     }),
 
     actions: {
-        async setFriendInfo(friendInfo: any, user_id: string) {
+        async setFriendInfo(friendInfo: any) {
             this.friendInfo = friendInfo
-            this.user_id = user_id
             console.log('切换好友聊天记录', this.chatMap);
             if (!this.chatMap[this.friendInfo.user_id]) {
                 let res: any = await getChat({
@@ -33,9 +32,15 @@ const chatStore = defineStore('chat', {
                     this.chatMap[this.friendInfo.user_id] = res.data
                 }
             }
-            this.chatHistory = this.chatMap[this.friendInfo.user_id]
+            let arr = this.chatMap[this.friendInfo.user_id]
+            arr.sort((a: any, b: any) => {
+                return new Date(a.created_at) - new Date(b.created_at);
+            });
+            this.chatHistory = arr
             this.chatNumMap[this.friendInfo.user_id] = 0
         },
+
+
         // 保存聊天记录
         async setChatHistory(data: any) {
             let lastChats = [];
@@ -54,7 +59,6 @@ const chatStore = defineStore('chat', {
         },
 
         receiveChatHistory(data: any) {
-            console.log('所有聊天记录', this.chatMap);
             this.chatMap[data.sender] = this.chatMap[data.sender] || []
             this.chatMap[data.sender].push({
                 'chat_message': [data]
@@ -69,11 +73,14 @@ const chatStore = defineStore('chat', {
         },
 
         async getAllChatHistory(user_id: string, friends: any[]) {
-            let res = await getAllChat({
+            this.user_id = user_id
+            let res: any = await getAllChat({
                 user_id: user_id, friends: friends
             })
             console.log('获取所有聊天记录 ----->', res);
-
+            if (res.success) {
+                this.chatMap = res.data
+            }
         },
     }
 })
