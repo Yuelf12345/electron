@@ -40,7 +40,7 @@
                                     <span>{{ friend.nickname }}</span>
                                 </div>
                                 <div class="friend-message">
-                                    <span>{{ lastMsg(friend.user_id) }}</span>
+                                    <span v-html="lastMsg(friend.user_id)"></span>
                                 </div>
                             </div>
                             <div class="unread-message" v-if="chatNumMap[friend.user_id] > 0">
@@ -82,7 +82,7 @@ const friendClick = (data: any) => {
 }
 
 const friends = ref(userInfo.value.friends)
-chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
+
 </script>
 
 <style lang="scss" scoped>

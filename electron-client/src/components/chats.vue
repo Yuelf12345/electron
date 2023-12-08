@@ -1,44 +1,42 @@
 <template>
     <div class="chat-content" @keydown.enter="enterSendMsg">
         <div class="chat-list" ref="chatContent">
-            <el-scrollbar height="400px">
-                <div v-for=" (chats, index) in chatHistory" :key="index">
-                    <div class="chat-time">{{ new Date(chats.chat_datetime).toLocaleString() }}</div>
-                    <div v-for="item in chats.chat_message">
-                        <div class="message others" v-if="item.sender != userInfo.user_id">
-                            <div class="avatar">
-                                <el-avatar :src="imgUrl(friendInfo.avatar)" />
-                            </div>
-                            <div class="content">
-                                <p class="author_name">{{ friendInfo.nickname }}</p>
-                                <div class="bubble  bubble_default left">
-                                    <div class="bubble_cont">
-                                        <div class="plain">
-                                            <div v-if="item.type == 1" v-html="item.msg"></div>
-                                            <img v-if="item.type == 2" :src="item.msg" alt="">
-                                        </div>
+            <div v-for=" (chats, index) in chatHistory" :key="index">
+                <div class="chat-time">{{ new Date(chats.chat_datetime).toLocaleString() }}</div>
+                <div v-for="item in chats.chat_message">
+                    <div class="message others" v-if="item.sender != userInfo.user_id">
+                        <div class="avatar">
+                            <el-avatar :src="imgUrl(friendInfo.avatar)" />
+                        </div>
+                        <div class="content">
+                            <p class="author_name">{{ friendInfo.nickname }}</p>
+                            <div class="bubble  bubble_default left">
+                                <div class="bubble_cont">
+                                    <div class="plain">
+                                        <div v-if="item.type == 1" v-html="item.msg"></div>
+                                        <img v-if="item.type == 2" :src="item.msg" alt="">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="message me" v-else>
-                            <div class="avatar">
-                                <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
-                            </div>
-                            <div class="content">
-                                <div class="bubble  bubble_primary right">
-                                    <div class="bubble_cont">
-                                        <div class="plain">
-                                            <div v-if="item.type == 1" v-html="item.msg"></div>
-                                            <img v-if="item.type == 2" :src="item.msg" alt="">
-                                        </div>
+                    </div>
+                    <div class="message me" v-else>
+                        <div class="avatar">
+                            <el-avatar :size="50" :src="imgUrl(userInfo.avatar)" />
+                        </div>
+                        <div class="content">
+                            <div class="bubble  bubble_primary right">
+                                <div class="bubble_cont">
+                                    <div class="plain">
+                                        <div v-if="item.type == 1" v-html="item.msg"></div>
+                                        <img v-if="item.type == 2" :src="item.msg" alt="">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </el-scrollbar>
+            </div>
         </div>
         <div class="chat-input" @click.stop="handleClick('input')">
             <div class="chat-btns">
@@ -121,10 +119,6 @@ let rangeInput: Range;          // 选中文本的范围
 const handleClick = (type: string) => {
     inputType.value = type;
 }
-// const handleEmojiClick = (emoji: number|unknown) => {
-//     let emojiImg = `<img src="${getImageUrl(emoji)}" width="25" height="25" style="vertical-align: middle;" />`
-//     inputMsg.value.innerHTML += emojiImg;
-// }
 
 const msgInpuClick = (e: any) => {
     let target = e.target;
@@ -201,12 +195,14 @@ const handleSendMsg = debounce(() => {
     chatStore.setChatHistory(data)
 }, 500)
 
+// 监听接收聊天记录
 socket.on('receiveMsg', (data: any) => {
     chatStore.receiveChatHistory(data)
 });
 
 // 滚动到底部
 watch(() => chatStore.chatHistory, () => {
+    console.log('变化');
     scrollToBottom()
 }, {
     deep: true
@@ -214,7 +210,9 @@ watch(() => chatStore.chatHistory, () => {
 const chatContent = ref()
 const scrollToBottom = () => {
     nextTick(() => {
-        chatContent.value.scrollTop = chatContent.value.scrollHeight - chatContent.value.offsetHeight
+        chatContent.value.scrollTop = chatContent.value.scrollHeight - chatContent.value.offsetHeight + 100
+        console.log(chatContent.value.scrollTop, chatContent.value.scrollHeight, chatContent.value.offsetHeight);
+
     })
 }
 

@@ -11,12 +11,12 @@
 
       <form action="" onsubmit="return false">
         <label class="form-control__label">Account</label>
-        <input type="text" class="form-control" v-model="userInfo.username" />
+        <input type="text" class="form-control" v-model="userForm.username" />
 
         <label class="form-control__label">Password</label>
         <div class="password-field">
           <input :type="!togglePassword ? 'password' : 'text'" class="form-control" id="password" ref="password"
-            v-model="userInfo.password" />
+            v-model="userForm.password" />
           <div @click="togglePassword = !togglePassword">
             <el-icon v-if="togglePassword" size="22">
               <View />
@@ -67,32 +67,37 @@
 </template>
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
-import { IUserInfo } from "@/utils/types"
+import { IuserForm } from "@/utils/types"
+import { storeToRefs } from 'pinia'
 import logo from '@/assets/logo.png'
 import useStore from "@/store";
 import { ElMessage } from "element-plus";
 import md5 from 'js-md5';
-const { userStore } = useStore();
-console.log('userStore', userStore);
+const { userStore,chatStore } = useStore();
+const {userInfo} = storeToRefs(userStore);
+console.log('useStore', userStore,chatStore);
 const isLogin = ref<boolean>(true);
 const togglePassword = ref<boolean>(false);
-const userInfo = reactive<IUserInfo>({
+const userForm = reactive<IuserForm>({
   username: "yue",
   password: "123",
 });
 const login = async () => {
-  if (!userInfo.username) {
+  if (!userForm.username) {
     ElMessage.error("请输入用户名");
     return
   }
-  if (!userInfo.password) {
+  if (!userForm.password) {
     ElMessage.error("请输入密码");
     return
   }
-  let res = await userStore.login({ username: userInfo.username, password: md5(userInfo.password) }, isLogin.value)
+  let res = await userStore.login({ username: userForm.username, password: md5(userForm.password) }, isLogin.value)
   if (res.success) {
     ElMessage.success(res.msg);
     isLogin.value = true;
+    userStore.friends().then(()=>{
+      chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
+    })
   } else {
     ElMessage.error(res.msg);
   }

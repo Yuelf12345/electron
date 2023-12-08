@@ -261,7 +261,7 @@ const select = (index: number, path: string) => {
         }
 
         .chat-body {
-            flex: 1;
+            height: 100%;
         }
     }
 }

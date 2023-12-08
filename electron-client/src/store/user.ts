@@ -46,7 +46,6 @@ const userStore = defineStore('user', {
                         
                     })
                     router.push('/')
-                    this.friends()
                 }
             } else {
                 res = await Register(userInfo)
@@ -60,7 +59,7 @@ const userStore = defineStore('user', {
             if (res.success) {
                 this.userInfo.friends = res.data
             }
-            // return res;
+            return res;
         },
     },
     persist: true

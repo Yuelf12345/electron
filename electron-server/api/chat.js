@@ -91,25 +91,32 @@ const chat = {
         const { user_id, friends } = ctx.request.body
         const startTime = new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
         const endTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
-        console.log('startTime', startTime, endTime);
         let friend_ids = friends.map(item => {
             return item.user_id
         })
-        let rs = await db.query("select * from `chats` where `sender_id` =? and `receiver_id` in (?) and `created_at` between? and? and `isDel` =?", [
-            user_id, friend_ids, startTime, endTime, 1
+        console.log('startTime', user_id, friend_ids, startTime, endTime);
+        let rs = await db.query("select * from `chats` where `sender_id` =? and `receiver_id` in (?) and `created_at` between ? and ? and `isDel` = 1", [
+            user_id, friend_ids, startTime, endTime
         ])
-        let arr = rs[0];
-        let chatMap = {};
-        if (arr.length > 0) {
-            for (let i = 0; i < arr.length; i++) {
-                if (chatMap[(arr[i].receiver_id)] != undefined) {
-                    chatMap[arr[i].receiver_id].push(arr[i]);
 
-                } else {
-                    chatMap[arr[i].receiver_id]= [arr[i]];
+        const sortArr = (arr) => {
+            let chatMap = {};
+            if (arr.length > 0) {
+                for (let i = 0; i < arr.length; i++) {
+                    if (chatMap[(arr[i].receiver_id)] != undefined) {
+                        let a = chatMap[arr[i].receiver_id];
+                        a.push(arr[i])
+                        a.sort((a, b) => {
+                            return new Date(a.created_at) - new Date(b.created_at);
+                        });
+                    } else {
+                        chatMap[arr[i].receiver_id] = [arr[i]];
+                    }
                 }
             }
+            return chatMap;
         }
+        let chatMap = await sortArr(rs[0]);
         ctx.body = {
             code: 200,
             success: true,
