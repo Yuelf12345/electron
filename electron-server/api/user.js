@@ -124,6 +124,16 @@ const user = {
             console.log(error);
         }
     },
+    searchFriends: async (ctx) => {
+        const { search } = ctx.request.body
+        let rs = await db.query("select * from users where nickname like '%" + search + "%'");
+        ctx.body ={
+            code: 200,
+            success: true,
+            msg: '搜索成功',
+            data: rs[0]
+        }
+    },
     // 添加好友
     addFriends: async (ctx) => {
         ctx.body = '好友添加';

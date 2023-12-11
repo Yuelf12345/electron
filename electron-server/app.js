@@ -46,6 +46,7 @@ router.post('/register', User.userRegister)
 router.post('/login', User.userLogin)
 router.post('/addFriends', User.addFriends)
 router.post('/getFriends', User.getFriends)
+router.post('/searchFriends', User.searchFriends)
 
 // 聊天
 router.post('/upDateChat', Chat.upDateChat)

@@ -56,11 +56,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import useStore from '@/store';
 import { storeToRefs } from 'pinia'
 import { imgUrl } from '@/utils/util'
-import { fr } from 'element-plus/es/locale/index.js';
 const search = ref('')
 const { userStore, chatStore } = useStore()
 const { userInfo, bgColor } = storeToRefs(userStore)
@@ -81,6 +80,7 @@ const friendClick = (data: any) => {
     chatStore.setFriendInfo(data)
 }
 
+chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
 const friends = ref(userInfo.value.friends)
 
 </script>

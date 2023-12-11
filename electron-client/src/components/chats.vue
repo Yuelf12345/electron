@@ -202,7 +202,6 @@ socket.on('receiveMsg', (data: any) => {
 
 // 滚动到底部
 watch(() => chatStore.chatHistory, () => {
-    console.log('变化');
     scrollToBottom()
 }, {
     deep: true
@@ -210,9 +209,7 @@ watch(() => chatStore.chatHistory, () => {
 const chatContent = ref()
 const scrollToBottom = () => {
     nextTick(() => {
-        chatContent.value.scrollTop = chatContent.value.scrollHeight - chatContent.value.offsetHeight + 100
-        console.log(chatContent.value.scrollTop, chatContent.value.scrollHeight, chatContent.value.offsetHeight);
-
+        chatContent.value.scrollTop = chatContent.value.scrollHeight - chatContent.value.offsetHeight + 100;
     })
 }
 

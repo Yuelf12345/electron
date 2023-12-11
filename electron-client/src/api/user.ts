@@ -23,3 +23,11 @@ export const getFriends = (data: any) => {
         data
     });
 };
+
+export const searchFriends = (data: any) => {
+    return request({
+        url: "/searchFriends",
+        method: "post",
+        data
+    });
+};

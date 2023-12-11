@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { IUserInfo } from "@/utils/types"
-import { Login, Register, getFriends } from "@/api/user"
+import { Login, Register, getFriends, searchFriends } from "@/api/user"
 import router from '@/router'
 import { connect } from '@/utils/io'
 
@@ -26,11 +26,11 @@ const userStore = defineStore('user', {
             token: '',
             refresh_token: '',
         },
-        bgColor:'#fff'
+        bgColor: '#fff'
     }),
     actions: {
         async login(userInfo: IUserInfo, isLogin: boolean) {
-            let res:any
+            let res: any
             if (isLogin) {
                 res = await Login(userInfo)
                 console.log('Login----->res', res);
@@ -38,12 +38,12 @@ const userStore = defineStore('user', {
                     this.userInfo = res.data
                     localStorage.setItem('y_t', res.data.token)
                     localStorage.setItem('y_r_t', res.data.refresh_token)
-                     await connect(res.data.user_id).then((res)=>{
-                        if(res.connected){
+                    await connect(res.data.user_id).then((res) => {
+                        if (res.connected) {
                             this.connected = true
                             this.socket_id = res.id
                         }
-                        
+
                     })
                     router.push('/')
                 }
@@ -53,7 +53,7 @@ const userStore = defineStore('user', {
             return res;
         },
         async friends() {
-            let res
+            let res: any;
             res = await getFriends({ user_id: this.userInfo.user_id })
             console.log('getFriends---->res', res);
             if (res.success) {
@@ -61,6 +61,15 @@ const userStore = defineStore('user', {
             }
             return res;
         },
+
+        async search(search: string) {
+            let res: any;
+            res = await searchFriends({search})
+            if (res.success) {
+                console.log('res', res);
+            }
+            return res;
+        }
     },
     persist: true
 })
