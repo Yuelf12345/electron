@@ -62,15 +62,15 @@
 
                 </div>
             </div>
-            <div class="nav-exit">
-                <svg t="1701352100009" class="nav-icon" viewBox="0 0 1024 1024" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" p-id="838" width="200" height="200">
+            <div class="nav-exit" @click="logout">
+                <svg class="nav-icon" style="vertical-align: middle;fill: #000;overflow: hidden;"
+                    viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6861">
                     <path
-                        d="M523.12 202.56a16 16 0 0 0-22.12 0L132.8 554.3a16 16 0 0 0-4.94 11.58L127.8 896a64 64 0 0 0 64 64H384a32 32 0 0 0 32-32V656a16 16 0 0 1 16-16h160a16 16 0 0 1 16 16v272a32 32 0 0 0 32 32h192.12a64 64 0 0 0 64-64V565.88a16 16 0 0 0-4.94-11.58z"
-                        fill="#000000" p-id="839"></path>
+                        d="M731.428571 219.428571h54.857143a18.285714 18.285714 0 0 1 18.285715 18.285715v548.571428a18.285714 18.285714 0 0 1-18.285715 18.285715h-54.857143a73.142857 73.142857 0 0 0-73.142857 73.142857v73.142857a73.142857 73.142857 0 0 0 73.142857 73.142857h182.857143a109.714286 109.714286 0 0 0 109.714286-109.714286V109.714286a109.714286 109.714286 0 0 0-109.714286-109.714286H731.428571a73.142857 73.142857 0 0 0-73.142857 73.142857v73.142857a73.142857 73.142857 0 0 0 73.142857 73.142857z"
+                        fill="#333333" p-id="6862"></path>
                     <path
-                        d="M981.82 488.3l-149.6-143.12V128a32 32 0 0 0-32-32h-96a32 32 0 0 0-32 32v64l-115.84-110.76C545.54 70.28 529.42 64 512 64c-17.36 0-33.44 6.28-44.28 17.26l-425.4 407c-12.44 12-14 31.74-2.68 44.74A32 32 0 0 0 86 535.12L501 138.56a16 16 0 0 1 22.12 0l415.04 396.56a32 32 0 0 0 45.18-0.88c12.28-12.72 11.26-33.72-1.52-45.94z"
-                        fill="#000000" p-id="840"></path>
+                        d="M364.068571 384h280.32a73.142857 73.142857 0 0 1 73.142858 73.142857v109.714286a73.142857 73.142857 0 0 1-73.142858 73.142857H364.068571a18.285714 18.285714 0 0 0-18.285714 18.285714v85.577143a36.571429 36.571429 0 0 1-60.16 27.794286L12.8 539.794286a36.571429 36.571429 0 0 1 0-54.857143L285.622857 252.342857a36.571429 36.571429 0 0 1 60.16 27.794286V365.714286a18.285714 18.285714 0 0 0 18.285714 18.285714z"
+                        fill="#333333" p-id="6863"></path>
                 </svg>
             </div>
         </div>
@@ -89,29 +89,15 @@
                 </div>
             </div>
             <div class="main-body">
-                <router-view></router-view>
+                <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is="Component" />
+                    </keep-alive>
+                </router-view>
             </div>
         </div>
         <div class="chats">
-            <div class="chat-header">
-                <div class="chat-name">
-                    <span>chatname</span>
-                </div>
-                <div class="chat-btns">
-                    <el-icon>
-                        <Picture />
-                    </el-icon>
-                    <el-icon>
-                        <Phone />
-                    </el-icon>
-                    <el-icon>
-                        <VideoCamera />
-                    </el-icon>
-                </div>
-            </div>
-            <div class="chat-body">
-                <Chats></Chats>
-            </div>
+            <Chats></Chats>
         </div>
     </div>
 </template>
@@ -133,6 +119,11 @@ const select = (index: number, path: string) => {
     isActive.value = index;
     router.push({ path })
 };
+const logout = () => {
+    userStore.logout().then(() => {
+        router.push('/login')
+    })
+}
 </script>
 <style langs="scss" scoped>
 .container {
@@ -181,8 +172,9 @@ const select = (index: number, path: string) => {
 
         .nav-exit {
             .nav-icon {
-                width: 2rem;
-                height: 2rem;
+                margin-left: 0.5rem;
+                width: 1.5rem;
+                height: 1.5rem;
             }
         }
     }
@@ -240,29 +232,6 @@ const select = (index: number, path: string) => {
         flex: 1;
         display: flex;
         flex-direction: column;
-
-        .chat-header {
-            padding: 0 1rem 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ce88ff;
-
-            .chat-name {
-                font-size: 25px;
-                font-weight: 600;
-            }
-
-            .chat-btns {
-                display: flex;
-                gap: 10px;
-                font-size: 20px;
-            }
-        }
-
-        .chat-body {
-            height: 100%;
-        }
     }
 }
 
@@ -292,5 +261,4 @@ const select = (index: number, path: string) => {
     width: 0.3rem;
     inset: auto auto -25% -25%;
     transition: inset 300ms ease, width 300ms ease, border-radius 300ms ease;
-}
-</style>
+}</style>

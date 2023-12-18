@@ -89,7 +89,7 @@ const chat = {
     // 获取所有好友聊天记录
     getAllChat: async (ctx) => {
         const { user_id, friends } = ctx.request.body
-        const startTime = new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
+        const startTime = new Date(new Date().getTime() - 15 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
         const endTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toLocaleDateString('zh-CN');
         let friend_ids = friends.map(item => {
             return item.user_id

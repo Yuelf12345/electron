@@ -52,6 +52,11 @@ const userStore = defineStore('user', {
             }
             return res;
         },
+        async logout(){
+            localStorage.removeItem('y_t')
+            localStorage.removeItem('y_r_t')
+            localStorage.removeItem('user')
+        },
         async friends() {
             let res: any;
             res = await getFriends({ user_id: this.userInfo.user_id })

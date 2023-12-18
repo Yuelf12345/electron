@@ -95,9 +95,6 @@ const login = async () => {
   if (res.success) {
     ElMessage.success(res.msg);
     isLogin.value = true;
-    userStore.friends().then(()=>{
-      chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
-    })
   } else {
     ElMessage.error(res.msg);
   }

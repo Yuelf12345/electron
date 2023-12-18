@@ -23,12 +23,14 @@ const chatStore = defineStore('chat', {
         async setFriendInfo(friendInfo: any) {
             this.friendInfo = friendInfo
             this.chatHistory = this.chatMap[this.friendInfo.user_id]
+            console.log('好友信息', this.chatHistory);
             this.chatNumMap[this.friendInfo.user_id] = 0
         },
 
         // 保存聊天记录
         async setChatHistory(data: any) {
             let lastChats = [];
+            console.log('this.chatHistory',this.chatHistory);
             if (this.chatHistory.length > 0) {
                 lastChats = this.chatHistory[this.chatHistory.length - 1].chat_message
             }

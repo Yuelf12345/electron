@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -35,8 +36,18 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist',
-    assetsDir: 'static',
-    emptyOutDir: true,
+    // outDir: 'dist',
+    // assetsDir: 'static',
+    // emptyOutDir: true,
+    rollupOptions: {
+      manualChunks(id) {
+        if (id.includes('node_modules')) {
+          return 'vendor'
+        }
+        if (id.includes('view')) {
+          return 'view'
+        }
+      }
+    }
   }
 })

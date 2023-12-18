@@ -48,7 +48,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -64,8 +63,6 @@ const search = ref('')
 const { userStore, chatStore } = useStore()
 const { userInfo, bgColor } = storeToRefs(userStore)
 const { chatMap, chatNumMap } = storeToRefs(chatStore)
-console.log('chatMap', chatMap);
-
 const lastMsg = (id: string) => {
     let chat;
     if (chatMap.value[id]) {
@@ -79,9 +76,12 @@ const lastMsg = (id: string) => {
 const friendClick = (data: any) => {
     chatStore.setFriendInfo(data)
 }
+let friends = ref<any>([])
+userStore.friends().then(() => {
+    chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
+    friends.value = userInfo.value.friends
+})
 
-chatStore.getAllChatHistory(userInfo.value.user_id, userInfo.value.friends)
-const friends = ref(userInfo.value.friends)
 
 </script>
 

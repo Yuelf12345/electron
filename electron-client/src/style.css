@@ -2,9 +2,10 @@
     resize: none !important;
     outline: #fff dashed;
     border: #fff !important;
-    box-shadow:none !important;
+    box-shadow: none !important;
     color: black !important;
 }
+
 .el-textarea__inner::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.4);
 }
@@ -15,7 +16,13 @@
     background-color: white;
 }
 
-body{
+body {
     margin: 0px;
     padding: 0px;
+    overflow-y: scroll;
+}
+
+
+body::-webkit-scrollbar {
+    width: 0px;
 }

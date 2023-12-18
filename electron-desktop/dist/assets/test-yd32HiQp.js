@@ -1,0 +1,1 @@
+import{_ as c,o,c as t,p as a,l as _,e as s}from"./index-VrkWM7w8.js";const d={},n=e=>(a("data-v-fc4756f8"),e=e(),_(),e),r={class:"container"},i=n(()=>s("div",{class:"box"},[s("div",{class:"item"})],-1)),p=[i];function f(e,l){return o(),t("div",r,p)}const m=c(d,[["render",f],["__scopeId","data-v-fc4756f8"]]);export{m as default};
