@@ -47,6 +47,8 @@ const chatStore = defineStore('chat', {
             if (data.sender != this.friendInfo.user_id) {
                 this.chatNumMap[data.sender] = this.chatNumMap[data.sender] || 0
                 this.chatNumMap[data.sender] += 1
+                let len = this.chatMap[data.sender].length
+                this.chatMap[data.sender][len -1].chat_message.push(data)
             }
             console.log('接收聊天记录', data);
             this.setChatHistory(data)

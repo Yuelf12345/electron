@@ -31,7 +31,6 @@ const createWindow = () => {
         // 自定义
         dialog.showMessageBox()
     })
-
 }
 
 

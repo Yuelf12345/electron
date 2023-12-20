@@ -10,8 +10,12 @@ const ioMiddleware = async (io) => {
             console.log('socketList',socketList);
         });
         socket.on('sendPrivateMsg',async (data) => {
-            console.log('data11111', data);
+            console.log('data11111', data,socketList,socketList[data.receiver]);
             await socket.to(socketList[data.receiver]).emit('receiveMsg', data)
+        })
+        socket.on('disconnect', (userId) => {
+            delete  socketList[userId]
+            console.log('disconnect', userId, socket.id);
         })
     });
 };

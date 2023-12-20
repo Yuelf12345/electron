@@ -35,7 +35,7 @@ const chat = {
         ])
         // 如果聊天记录存在，则更新聊天记录
         if (rs[0].length > 0) {
-            console.log('chat_message', chat_message);
+            // console.log('chat_message', chat_message);
             await db.query("update `chats` set `chat_message` =?,`chat_datetime` =? where `sender_id` =? and `receiver_id` =? and `created_at` between? and? and `isDel` =?", [
                 chat_message, chat_datetime, sender_id, receiver_id, startTime, endTime, isDel])
         } else {
@@ -69,7 +69,7 @@ const chat = {
                 created_at: created_at,
             })
         });
-        console.log('chatHistory', chatHistory);
+        // console.log('chatHistory', chatHistory);
         if (rs[0].length > 0) {
             ctx.body = {
                 code: 200,
@@ -94,7 +94,7 @@ const chat = {
         let friend_ids = friends.map(item => {
             return item.user_id
         })
-        console.log('startTime', user_id, friend_ids, startTime, endTime);
+        // console.log('startTime', user_id, friend_ids, startTime, endTime);
         let rs = await db.query("select * from `chats` where `sender_id` =? and `receiver_id` in (?) and `created_at` between ? and ? and `isDel` = 1", [
             user_id, friend_ids, startTime, endTime
         ])
