@@ -1,8 +1,10 @@
 # 11-28 项目搭建
 
-- electron-demo 桌面端
-- electron-server 服务端
-- electron-client 客户端
+yarn install
+
+- electron-demo 桌面端      yarn dev
+- electron-server 服务端    yarn dev
+- electron-client 客户端    node app.js
 
 # 11-28 数据库设计(server端)
 
